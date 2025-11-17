@@ -1,0 +1,27 @@
+name: WhatsApp Auto-Sender
+on:
+  schedule:
+    - cron: '*/5 * * * *'  # Tourne toutes les 5 minutes
+  workflow_dispatch:  # Permet de déclencher manuellement
+
+jobs:
+  send-messages:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: pip install requests python-dotenv
+
+      - name: Run WhatsApp Bot
+        env:
+          PHONE_ID: ${{ secrets.PHONE_ID }}
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          WEBHOOK_VERIFY_TOKEN: ${{ secrets.WEBHOOK_VERIFY_TOKEN }}
+        run: python whatsapp_bot.py
